@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudyFlow — Samla studierna på ett ställe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #f2e9e4;
+    --paper-line: #e2d3cb;
+    --ink: #22223b;
+    --ink-soft: #4a4e69;
+    --pine: #4a4e69;
+    --pine-deep: #22223b;
+    --mustard: #c9ada7;
+    --mustard-soft: #e4d2cc;
+    --clay: #8b7e89;
+    --sky: #6a6f92;
+    --card: #faf5f2;
+    --radius: 4px;
+    --radius-lg: 10px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    line-height:1.08;
+    margin:0;
+    color:var(--pine-deep);
+  }
+  p{margin:0;}
+  a{color:inherit;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 32px;}
+  .tag{
+    font-family:'Caveat', cursive;
+    font-size:1.3rem;
+    color:var(--clay);
+    display:inline-block;
+    transform:rotate(-2deg);
+  }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:var(--paper);
+    border-bottom:2px solid var(--pine-deep);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 32px; max-width:1120px; margin:0 auto;
+  }
+  .logo{
+    font-family:'Fraunces', serif; font-weight:600; font-size:1.4rem;
+    color:var(--pine-deep); letter-spacing:-0.01em;
+    display:flex; align-items:baseline; gap:6px;
+  }
+  .logo em{
+    font-style:normal; color:var(--clay);
+  }
+  .navlinks{display:flex; gap:6px; list-style:none; margin:0; padding:0;}
+  .navlinks a{
+    text-decoration:none; font-size:0.95rem; color:var(--ink);
+    padding:10px 16px; border-radius:99px 99px 0 0;
+    position:relative;
+  }
+  .navlinks a:hover{color:var(--pine-deep);}
+  .navlinks li:nth-child(1) a{background:#e0dde4;}
+  .navlinks li:nth-child(2) a{background:#ecdcd7;}
+  .navlinks li:nth-child(3) a{background:#e6dfe2;}
+  .nav-cta{
+    background:var(--pine-deep); color:#fbf9f2; text-decoration:none;
+    padding:10px 20px; border-radius:6px; font-weight:600; font-size:0.92rem;
+    box-shadow:3px 3px 0 var(--mustard);
+  }
+  .navtoggle{display:none;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:76px 0 96px;
+    background-image:
+      linear-gradient(var(--paper-line) 1px, transparent 1px);
+    background-size: 100% 34px;
+  }
+  .hero-grid{
+    display:grid; grid-template-columns: 1.05fr 0.95fr; gap:64px; align-items:center;
+  }
+  .eyebrow-note{
+    font-family:'Caveat', cursive; font-size:1.35rem; color:var(--clay);
+    transform:rotate(-1.5deg); display:inline-block; margin-bottom:10px;
+  }
+  .hero h1{
+    font-size:3.4rem; letter-spacing:-0.015em;
+  }
+  .hero h1 .underline{
+    background:linear-gradient(transparent 62%, var(--mustard-soft) 62%);
+  }
+  .hero p.lede{
+    margin-top:22px; font-size:1.15rem; color:var(--ink-soft); max-width:46ch;
+  }
+  .hero-ctas{display:flex; gap:14px; margin-top:34px; flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--pine-deep); color:#fbf9f2; text-decoration:none;
+    padding:15px 26px; border-radius:6px; font-weight:600;
+    box-shadow:4px 4px 0 var(--mustard); border:none; cursor:pointer;
+    font-size:1rem; font-family:inherit;
+    transition:transform .15s ease;
+  }
+  .btn-primary:hover{transform:translate(-2px,-2px);}
+  .btn-secondary{
+    background:transparent; color:var(--pine-deep); text-decoration:none;
+    padding:15px 22px; border-radius:6px; font-weight:600; font-size:1rem;
+    border:2px solid var(--pine-deep);
+  }
+
+  /* Planner mockup */
+  .planner{
+    background:var(--card);
+    border-radius:var(--radius-lg);
+    border:1.5px solid #d8d2bd;
+    box-shadow:0 20px 40px -18px rgba(22,48,37,0.35);
+    padding:26px 24px 22px;
+    position:relative;
+    transform:rotate(1.2deg);
+  }
+  .tape{
+    position:absolute; top:-14px; left:38px; width:88px; height:26px;
+    background:var(--mustard-soft); opacity:0.85; transform:rotate(-4deg);
+    box-shadow:0 2px 4px rgba(0,0,0,0.15);
+  }
+  .planner-head{
+    display:flex; justify-content:space-between; align-items:baseline;
+    border-bottom:2px solid var(--pine-deep); padding-bottom:10px; margin-bottom:14px;
+  }
+  .planner-head h3{font-size:1.15rem;}
+  .planner-head span{font-family:'Caveat',cursive; font-size:1.15rem; color:var(--sky);}
+  .plan-row{
+    display:flex; align-items:center; gap:12px; padding:10px 0;
+    border-bottom:1px dashed #d8d2bd;
+  }
+  .plan-row:last-of-type{border-bottom:none;}
+  .checkbox{
+    width:20px; height:20px; border:2px solid var(--pine); border-radius:4px;
+    flex:none; cursor:pointer; position:relative; background:transparent;
+  }
+  .checkbox.checked{background:var(--pine); }
+  .checkbox.checked::after{
+    content:''; position:absolute; left:5px; top:1px; width:5px; height:10px;
+    border-right:2px solid #fbf9f2; border-bottom:2px solid #fbf9f2; transform:rotate(40deg);
+  }
+  .plan-row .subj{font-weight:600; font-size:0.98rem;}
+  .plan-row .meta{font-size:0.83rem; color:var(--ink-soft); margin-top:2px;}
+  .plan-row.done .subj, .plan-row.done .meta{color:#8b9188; text-decoration:line-through;}
+  .swatch{width:6px; align-self:stretch; border-radius:3px; flex:none;}
+  .prov-alert{
+    margin-top:16px; background:#fbeee0; border:1px dashed var(--clay);
+    border-radius:6px; padding:12px 14px; font-size:0.88rem; color:var(--clay); font-weight:600;
+  }
+
+  /* ---------- PROBLEM ---------- */
+  section{padding:88px 0;}
+  .section-head{max-width:640px; margin-bottom:48px;}
+  .section-head h2{font-size:2.3rem;}
+  .section-head p{margin-top:14px; color:var(--ink-soft); font-size:1.05rem;}
+  .problems{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:28px;
+  }
+  .sticky{
+    background:var(--mustard-soft); padding:26px 22px; border-radius:2px;
+    box-shadow:0 10px 18px -12px rgba(0,0,0,0.3);
+    font-family:'Caveat', cursive; font-size:1.3rem; line-height:1.35; color:#3d2f2c;
+  }
+  .sticky:nth-child(2){background:#e2dde3; color:#33303c; transform:rotate(-1.4deg);}
+  .sticky:nth-child(3){background:#dcdde3; color:#22223b; transform:rotate(1.1deg);}
+  .sticky:nth-child(1){transform:rotate(1.6deg);}
+  .sticky .num{
+    display:block; font-family:'Work Sans',sans-serif; font-weight:700; font-size:0.78rem;
+    text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px; opacity:0.65;
+  }
+
+  /* ---------- FEATURES ---------- */
+  .features-band{background:var(--pine-deep); color:#f2e9e4;}
+  .features-band .section-head h2{color:#faf5f2;}
+  .features-band .section-head p{color:#c7c3d1;}
+  .features{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:24px;
+  }
+  .fcard{
+    background:#2f2f4d; border-radius:var(--radius-lg); padding:28px 24px;
+    border-top:5px solid var(--fc, var(--mustard));
+  }
+  .fcard:nth-child(1){--fc:#c9ada7;}
+  .fcard:nth-child(2){--fc:#9a8c98;}
+  .fcard:nth-child(3){--fc:#8489ab;}
+  .fcard h3{color:#faf5f2; font-size:1.25rem;}
+  .fcard p{margin-top:10px; color:#cbc7d2; font-size:0.95rem;}
+  .fcard .ficon{
+    width:38px; height:38px; border-radius:8px; background:var(--fc);
+    margin-bottom:16px; display:flex; align-items:center; justify-content:center;
+    color:#22223b; font-family:'Fraunces',serif; font-weight:600;
+  }
+
+  /* ---------- HOW IT WORKS ---------- */
+  .steps{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:0;
+    position:relative; counter-reset:step;
+  }
+  .step{padding:0 24px 0 0; position:relative;}
+  .step:not(:last-child)::after{
+    content:''; position:absolute; top:22px; right:-4px; width:100%; height:2px;
+    background-image:linear-gradient(to right, var(--pine) 40%, transparent 0%);
+    background-size:12px 2px; background-repeat:repeat-x;
+  }
+  .step-num{
+    width:44px; height:44px; border-radius:50%; background:var(--pine);
+    color:#fbf9f2; display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces',serif; font-weight:600; font-size:1.15rem; margin-bottom:18px;
+  }
+  .step h3{font-size:1.15rem;}
+  .step p{margin-top:8px; color:var(--ink-soft); font-size:0.95rem;}
+
+  /* ---------- PITCH QUOTE ---------- */
+  .pitch-wrap{
+    background:var(--card); border-radius:var(--radius-lg);
+    border:1.5px solid #d8d2bd; padding:52px 56px;
+    box-shadow:0 20px 40px -22px rgba(22,48,37,0.3);
+    position:relative;
+  }
+  .pitch-wrap::before{
+    content:'"'; font-family:'Fraunces',serif; font-size:5rem; color:var(--mustard);
+    position:absolute; top:8px; left:24px; line-height:1;
+  }
+  .pitch-text{
+    font-family:'Fraunces', serif; font-size:1.55rem; font-weight:500;
+    color:var(--pine-deep); max-width:64ch; line-height:1.42; position:relative;
+  }
+  .pitch-by{margin-top:22px; font-size:0.92rem; color:var(--ink-soft);}
+
+  /* ---------- PRICING ---------- */
+  .pricing{display:grid; grid-template-columns:repeat(2,1fr); gap:24px;}
+  .pcard{
+    background:var(--card); border-radius:var(--radius-lg); border:1.5px solid #d8d2bd;
+    padding:32px 28px;
+  }
+  .pcard.highlight{border:2px solid var(--pine-deep); box-shadow:6px 6px 0 var(--mustard-soft);}
+  .pcard h3{font-size:1.3rem;}
+  .pprice{font-family:'Fraunces',serif; font-size:2.4rem; color:var(--pine-deep); margin-top:12px;}
+  .pprice span{font-size:1rem; font-family:'Work Sans',sans-serif; color:var(--ink-soft); font-weight:400;}
+  .pcard ul{list-style:none; margin:22px 0 0; padding:0;}
+  .pcard li{padding:8px 0; border-top:1px dashed #d8d2bd; font-size:0.94rem; color:var(--ink-soft);}
+  .pcard li:first-child{border-top:none;}
+
+  /* ---------- CTA FOOTER ---------- */
+  .cta-final{
+    background:var(--pine-deep); color:#f2efe3; text-align:left;
+    border-radius:var(--radius-lg); padding:56px 56px; margin:0 32px 80px;
+    max-width:1056px; margin-left:auto; margin-right:auto;
+    display:flex; justify-content:space-between; align-items:center; gap:32px; flex-wrap:wrap;
+  }
+  .cta-final h2{color:#fbf9f2; font-size:2rem; max-width:20ch;}
+  footer{
+    border-top:2px solid var(--pine-deep); padding:32px 0; font-size:0.85rem; color:var(--ink-soft);
+  }
+  .footer-row{display:flex; justify-content:space-between; align-items:center;}
+
+  @media (max-width:860px){
+    .hero-grid{grid-template-columns:1fr;}
+    .navlinks{display:none;}
+    .problems, .features, .pricing{grid-template-columns:1fr;}
+    .steps{grid-template-columns:1fr; gap:36px;}
+    .step:not(:last-child)::after{display:none;}
+    .hero h1{font-size:2.4rem;}
+    .pitch-wrap{padding:36px 26px;}
+    .cta-final{padding:40px 28px; flex-direction:column; align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="logo">Study<em>Flow</em></div>
+    <ul class="navlinks">
+      <li><a href="#problem">Problemet</a></li>
+      <li><a href="#losning">Lösningen</a></li>
+      <li><a href="#pris">Pris</a></li>
+    </ul>
+    <a class="nav-cta" href="#pris">Kom igång</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow-note">äntligen ordning på plugget</span>
+      <h1>Sluta leta efter<br><span class="underline">rätt bok.</span><br>Börja plugga.</h1>
+      <p class="lede">StudyFlow samlar läromedel, provdatum och Classroom-uppgifter på ett ställe — och bygger en personlig studieplan efter Skolverkets läroplan, så du alltid vet vad som ska göras härnäst.</p>
+      <div class="hero-ctas">
+        <a class="btn-primary" href="#pris">Kom igång gratis</a>
+        <a class="btn-secondary" href="#losning">Se hur det funkar</a>
+      </div>
+    </div>
+    <div class="planner">
+      <div class="tape"></div>
+      <div class="planner-head">
+        <h3>Din plan idag</h3>
+        <span>tisdag</span>
+      </div>
+      <div class="plan-row">
+        <div class="swatch" style="background:#c9ada7;"></div>
+        <button class="checkbox" onclick="this.classList.toggle('checked'); this.closest('.plan-row').classList.toggle('done');"></button>
+        <div>
+          <div class="subj">Matte 2b — kap. 4, uppgift 12–18</div>
+          <div class="meta">Från läroboken · 25 min</div>
+        </div>
+      </div>
+      <div class="plan-row done">
+        <div class="swatch" style="background:#9a8c98;"></div>
+        <button class="checkbox checked" onclick="this.classList.toggle('checked'); this.closest('.plan-row').classList.toggle('done');"></button>
+        <div>
+          <div class="subj">Svenska — läs analys s. 40–55</div>
+          <div class="meta">Klar · synkad från Classroom</div>
+        </div>
+      </div>
+      <div class="plan-row">
+        <div class="swatch" style="background:#4a4e69;"></div>
+        <button class="checkbox" onclick="this.classList.toggle('checked'); this.closest('.plan-row').classList.toggle('done');"></button>
+        <div>
+          <div class="subj">Historia — repetera källkritik</div>
+          <div class="meta">Inför provet · 15 min</div>
+        </div>
+      </div>
+      <div class="prov-alert">⏰ Prov i matte om 4 dagar — planen är justerad</div>
+    </div>
+  </div>
+</section>
+
+<section id="problem">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Låter det bekant?</h2>
+      <p>Skolmaterialet ligger utspritt över böcker, mappar och plattformar. Det gör det lätt att missa vad som faktiskt ska göras.</p>
+    </div>
+    <div class="problems">
+      <div class="sticky"><span class="num">Vardag 1</span>Glömde matteboken i skåpet igen — nu vet jag inte vilka tal jag ska räkna.</div>
+      <div class="sticky"><span class="num">Vardag 2</span>Har provdatum i tre olika appar. Vet aldrig riktigt vad som gäller.</div>
+      <div class="sticky"><span class="num">Vardag 3</span>Vill plugga men vet inte var jag ska börja — så jag skjuter upp det.</div>
+    </div>
+  </div>
+</section>
+
+<section class="features-band" id="losning">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Allt du behöver, på ett ställe</h2>
+      <p>StudyFlow kopplar ihop din verklighet — läroböcker, Classroom och provdatum — och gör om den till en plan du faktiskt kan följa.</p>
+    </div>
+    <div class="features">
+      <div class="fcard">
+        <div class="ficon">1</div>
+        <h3>Ett ställe för allt material</h3>
+        <p>Läromedel, anteckningar och uppgifter samlade digitalt — ingen bok du kan glömma hemma.</p>
+      </div>
+      <div class="fcard">
+        <div class="ficon">2</div>
+        <h3>Provdatum + Classroom, synkat</h3>
+        <p>Koppla ditt Classroom-konto så hämtas deadlines och provdatum automatiskt in i din kalender.</p>
+      </div>
+      <div class="fcard">
+        <div class="ficon">3</div>
+        <h3>Din egen AI-studieplan</h3>
+        <p>AI:n bygger en plan utifrån Skolverkets läroplan och dina verkliga deadlines — uppdateras när något ändras.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Så kommer du igång</h2>
+      <p>Tre steg mellan dig och en plan som faktiskt känns hanterbar.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Koppla Classroom</h3>
+        <p>Logga in och länka ditt konto — uppgifter och deadlines förs över direkt.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Lägg till böcker & prov</h3>
+        <p>Ange dina läromedel och kommande provdatum, så anpassas planen efter dem.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Följ din plan</h3>
+        <p>Få en tydlig lista över vad som ska göras idag — och bocka av allteftersom.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="pitch-wrap">
+      <p class="pitch-text">Idag ligger skolmaterialet huller om buller. StudyFlow samlar allt på ett ställe — så att en glömd bok i skåpet aldrig behöver stoppa plugget igen.</p>
+      <p class="pitch-by">— Från StudyFlows grundarpitch</p>
+    </div>
+  </div>
+</section>
+
+<section id="pris">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Välj din nivå</h2>
+      <p>Gratis att testa. Uppgradera när du vill ha full AI-studieplan utan avbrott.</p>
+    </div>
+    <div class="pricing">
+      <div class="pcard">
+        <h3>Gratis</h3>
+        <div class="pprice">0 kr<span>/mån</span></div>
+        <ul>
+          <li>Samlat skolmaterial</li>
+          <li>Manuell kalender för provdatum</li>
+          <li>Innehåller reklam</li>
+        </ul>
+      </div>
+      <div class="pcard highlight">
+        <h3>Premium</h3>
+        <div class="pprice">79 kr<span>/mån</span></div>
+        <ul>
+          <li>Allt i Gratis, utan reklam</li>
+          <li>Classroom-synk i realtid</li>
+          <li>Personlig AI-studieplan</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="cta-final">
+  <h2>Redo att sluta leta och börja plugga?</h2>
+  <a class="btn-primary" href="#pris">Kom igång gratis</a>
+</div>
+
+<footer>
+  <div class="wrap footer-row">
+    <span>StudyFlow — flexibelt, effektivt och bättre</span>
+    <span>© 2026</span>
+  </div>
+</footer>
+
+</body>
+</html>
