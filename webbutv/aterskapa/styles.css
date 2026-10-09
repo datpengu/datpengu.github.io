@@ -1,0 +1,65 @@
+body {
+    background-image: url('../assets/bakgrund.png');
+    background-size: cover;
+    background-position: center;
+    font-family: 'Verdana', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #b93e1f;
+    font-family: 'Georgia', sans-serif;
+}
+
+header {
+    background-color: #333;
+    padding: 10px;
+    color: #ccc;
+    font-size: 14px;
+}
+
+#flex-container {
+    display: flex;
+    gap: 40px;
+}
+
+#container {
+    width: 800px;
+    margin: 0 auto;
+    background-color: #fefefe;
+    padding-bottom: 20px;
+}
+
+h1 {
+    padding: 20px 20px 0 40px;
+    margin: 0;
+    font-size: 60px;
+    font-weight: semi-bold;
+}
+
+h2 {
+    font-size: 22px;
+}
+
+main {
+    padding: 0 0px 0 40px;
+    margin: 0;
+}
+
+
+aside {
+    width: 210px;
+    padding: 0 40px 0 0px;
+}
+
+p, ol, li {
+    color: #333;
+    font-size: 14px;
+    
+}
+
+aside p {
+    border: 1px solid #ccc;
+    background-color: #eee;
+    padding: 10px 10px;
+    line-height: 19px;
+}
